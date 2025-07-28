@@ -1,0 +1,103 @@
+/* Register.css */
+.register {
+  max-width: 420px;
+  margin: 60px auto;
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border: 1px solid #e6e6e6;
+}
+
+.register h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #262626;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.register form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.register label {
+  font-weight: 500;
+  color: #444;
+  font-size: 14px;
+}
+
+.register input[type="text"],
+.register input[type="email"],
+.register input[type="password"],
+.register input[type="file"] {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #dbdbdb;
+  border-radius: 10px;
+  background: #fafafa;
+  outline: none;
+  font-size: 14px;
+  transition: border-color 0.3s ease, background 0.3s;
+}
+
+.register input:focus {
+  background: #fff;
+  border-color: #b993d6;
+  box-shadow: 0 0 0 2px rgba(185, 147, 214, 0.15);
+}
+
+.register button {
+  background: linear-gradient(to right, #b993d6, #8ca6db);
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+  transition: background 0.3s ease, transform 0.2s;
+}
+
+.register button:hover {
+  background: linear-gradient(to right, #a179c9, #748fcf);
+  transform: translateY(-1px);
+}
+
+/* Profile Photo preview */
+.profile-photo img {
+  display: block;
+  margin: 15px auto 10px;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 2px solid #b993d6;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s;
+}
+
+.profile-photo img:hover {
+  transform: scale(1.05);
+}
+
+.profile-photo button {
+  display: block;
+  margin: 8px auto;
+  background: #8ca6db;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s ease, transform 0.2s;
+}
+
+.profile-photo button:hover {
+  background: #6f89c8;
+  transform: translateY(-1px);
+}
