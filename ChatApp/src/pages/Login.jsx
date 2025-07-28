@@ -14,6 +14,9 @@ export default function Login() {
   try {
     const response = await axios.post("https://chatapp-opentalks.onrender.com/login", {
       withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
       email,
       password,
     });
