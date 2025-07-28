@@ -14,7 +14,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://chat-app-open-talks.vercel.app",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
     credentials: true
@@ -36,7 +36,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Middleware
 app.use(cookieParser());
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: "https://chat-app-open-talks.vercel.app", credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -80,13 +80,11 @@ let activeUsers = [];
 io.on('connection', (socket) => {
   socket.on('join', async (username) => {
     if (!username) return;
-
     socket.username = username;
-
     try {
       const user = await User.findOne({ name: username });
+      
       if (!user) return;
-
       const alreadyConnected = activeUsers.some(u => u.name === username);
       if (!alreadyConnected) {
         activeUsers.push({
