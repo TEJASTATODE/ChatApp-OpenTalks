@@ -23,7 +23,7 @@ export default function Register() {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/register", formData, {
+      const response = await axios.post("https://chatapp-opentalks.onrender.com/register", formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       alert("✅ User registered successfully!");

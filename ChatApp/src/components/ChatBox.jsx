@@ -25,7 +25,7 @@ const ChatBox = ({ selectedUser, setSelectedUser }) => {
 
       socket.emit("sendMessage", newMessage);
 
-      await fetch("http://localhost:5000/chat", {
+      await fetch("https://chatapp-opentalks.onrender.com/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newMessage),

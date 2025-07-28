@@ -37,7 +37,7 @@ const MessageBubble = ({
     >
       {!isOwnMessage && (
         <img
-          src={`http://localhost:5000/uploads/${avatar}`}
+          src={`https://chatapp-opentalks.onrender.com/uploads/${avatar}`}
           alt={sender}
           className="w-9 h-9 rounded-full object-cover mr-2 border shadow-sm"
         />

@@ -47,7 +47,7 @@ const UserList = () => {
           >
             <div className="relative">
               <img
-                src={`http://localhost:5000/uploads/${user.avatar || 'default.png'}`}
+                src={`https://chatapp-opentalks.onrender.com/uploads/${user.avatar || 'default.png'}`}
                 alt={user.name}
                 className="w-12 h-12 rounded-full object-cover border-2 border-white group-hover:scale-105 transition-transform duration-300"
               />

@@ -23,7 +23,7 @@ const PrivateChatBox = () => {
 
   const fetchPreviousMessages = useCallback(() => {
     if (!username || !receiver) return;
-    fetch(`http://localhost:5000/private-message/between/${username}/${receiver}`)
+    fetch(`https://chatapp-opentalks.onrender.com/private-message/between/${username}/${receiver}`)
       .then((res) => res.json())
       .then(setMessages)
       .catch((err) => console.error("❌ Failed to load messages:", err));
