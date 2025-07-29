@@ -35,13 +35,33 @@ const ChatBox = ({ selectedUser, setSelectedUser }) => {
     }
   };
 
+  const toggleReaction = (reactions, emoji, userId) => {
+    const newReactions = [...reactions];
+    const index = newReactions.findIndex((r) => r.emoji === emoji);
+
+    if (index > -1) {
+      if (!newReactions[index].reactedUsers?.includes(userId)) {
+        newReactions[index].count += 1;
+        newReactions[index].reactedUsers.push(userId);
+      }
+    } else {
+      newReactions.push({
+        emoji,
+        count: 1,
+        reactedUsers: [userId],
+      });
+    }
+
+    return newReactions;
+  };
+
   const handleReaction = (messageId, emoji) => {
     setMessages((prev) =>
       prev.map((msg) =>
         msg._id === messageId
           ? {
               ...msg,
-              reactions: toggleReaction(msg.reactions || [], emoji),
+              reactions: toggleReaction(msg.reactions || [], emoji, username),
             }
           : msg
       )
@@ -52,17 +72,6 @@ const ChatBox = ({ selectedUser, setSelectedUser }) => {
       emoji,
       userId: username,
     });
-  };
-
-  const toggleReaction = (reactions, emoji) => {
-    const index = reactions.findIndex((r) => r.emoji === emoji);
-    if (index > -1) {
-      const newReactions = [...reactions];
-      newReactions[index].count += 1;
-      return newReactions;
-    } else {
-      return [...reactions, { emoji, count: 1 }];
-    }
   };
 
   useEffect(() => {
@@ -116,7 +125,7 @@ const ChatBox = ({ selectedUser, setSelectedUser }) => {
           msg._id === data.messageId
             ? {
                 ...msg,
-                reactions: toggleReaction(msg.reactions || [], data.emoji),
+                reactions: toggleReaction(msg.reactions || [], data.emoji, data.userId),
               }
             : msg
         )
@@ -198,3 +207,4 @@ const ChatBox = ({ selectedUser, setSelectedUser }) => {
 };
 
 export default ChatBox;
+
