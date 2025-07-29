@@ -30,7 +30,7 @@ const PrivateChatBox = () => {
   }, [username, receiver]);
 
   const fetchAvatar = useCallback(() => {
-    fetch(`/avatar/${receiver}`)
+    fetch(`https://chatapp-opentalks.onrender.com/avatar/${receiver}`)
       .then((res) => res.json())
       .then((data) => setReceiverAvatar(data?.avatar || "default.png"))
       .catch(() => setReceiverAvatar("default.png"));
@@ -70,7 +70,6 @@ const PrivateChatBox = () => {
     socket.emit("typing", { to: receiver, isTyping: true });
   };
 
-  // 🔁 Load messages on mount
   useEffect(() => {
     fetchPreviousMessages();
   }, [fetchPreviousMessages]);
@@ -80,7 +79,7 @@ const PrivateChatBox = () => {
   }, [messages]);
 
   useEffect(() => {
-    if (receiver) fetchAvatar(`https://chatapp-opentalks.onrender.com/avatar/${receiver}`);
+    if (receiver) fetchAvatar();
   }, [fetchAvatar]);
 
   useEffect(() => {
@@ -143,7 +142,7 @@ const PrivateChatBox = () => {
       <div className="flex-1 overflow-y-auto p-4 space-y-1">
         {messages.map((msg, idx) => (
           <MessageBubble
-            key={idx}
+            key={`${msg.sender}-${msg.timestamp}-${idx}`}
             text={msg.message}
             sender={msg.sender}
             timestamp={msg.timestamp}
