@@ -17,7 +17,6 @@ const MessageBubble = ({
 
   const handleMouseEnter = () => setShowReactions(true);
   const handleMouseLeave = () => setShowReactions(false);
-
   const handleTouchStart = () => {
     pressTimer = setTimeout(() => setShowReactions(true), 200);
   };
@@ -38,8 +37,7 @@ const MessageBubble = ({
     >
       {!isOwnMessage && (
         <img
-          src={`http://localhost:5000/uploads/${avatar}`}
-          onError={(e) => (e.target.src = "http://localhost:5000/uploads/default.png")}
+          src={`https://chatapp-opentalks.onrender.com/uploads/${avatar}`}
           alt={sender}
           className="w-9 h-9 rounded-full object-cover mr-2 border shadow-sm"
         />
