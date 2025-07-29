@@ -30,7 +30,7 @@ const PrivateChatBox = () => {
   }, [username, receiver]);
 
   const fetchAvatar = useCallback(() => {
-    fetch(`http://localhost:5000/avatar/${receiver}`)
+    fetch(`/avatar/${receiver}`)
       .then((res) => res.json())
       .then((data) => setReceiverAvatar(data?.avatar || "default.png"))
       .catch(() => setReceiverAvatar("default.png"));
@@ -53,7 +53,7 @@ const PrivateChatBox = () => {
     socket.emit("typing", { to: receiver, isTyping: false });
 
     try {
-      await fetch("http://localhost:5000/private-message/save", {
+      await fetch("https://chatapp-opentalks.onrender.com/private-message/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(message),
@@ -80,7 +80,7 @@ const PrivateChatBox = () => {
   }, [messages]);
 
   useEffect(() => {
-    if (receiver) fetchAvatar();
+    if (receiver) fetchAvatar(`https://chatapp-opentalks.onrender.com/avatar/${receiver}`);
   }, [fetchAvatar]);
 
   useEffect(() => {
@@ -121,8 +121,8 @@ const PrivateChatBox = () => {
       {/* 🔷 Header */}
       <div className="flex items-center p-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white sticky top-0 z-10">
         <img
-          src={`http://localhost:5000/uploads/${receiverAvatar}`}
-          onError={(e) => (e.target.src = "http://localhost:5000/uploads/default.png")}
+          src={`https://chatapp-opentalks.onrender.com/uploads/${receiverAvatar}`}
+          onError={(e) => (e.target.src = "https://chatapp-opentalks.onrender.com/uploads/default.png")}
           alt={receiver}
           className="w-10 h-10 rounded-full mr-3 border border-white object-cover"
         />
