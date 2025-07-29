@@ -35,37 +35,25 @@ const ChatBox = ({ selectedUser, setSelectedUser }) => {
     }
   };
 
-  const toggleReaction = (reactions, emoji, userId) => {
-    const newReactions = [...reactions];
-    const index = newReactions.findIndex((r) => r.emoji === emoji);
-
-    if (index > -1) {
-      const userAlreadyReacted = newReactions[index].reactedUsers?.includes(userId);
-      if (!userAlreadyReacted) {
-        newReactions[index].count += 1;
-        newReactions[index].reactedUsers.push(userId);
-      }
-    } else {
-      newReactions.push({
-        emoji,
-        count: 1,
-        reactedUsers: [userId],
-      });
-    }
-
-    return newReactions;
-  };
-
   const handleReaction = (messageId, emoji) => {
     setMessages((prev) =>
-      prev.map((msg) =>
-        msg._id === messageId
-          ? {
-              ...msg,
-              reactions: toggleReaction(msg.reactions || [], emoji, username),
-            }
-          : msg
-      )
+      prev.map((msg) => {
+        if (msg._id !== messageId) return msg;
+
+        const updatedReactions = [...(msg.reactions || [])];
+        const existing = updatedReactions.find((r) => r.emoji === emoji);
+
+        if (existing) {
+          if (!existing.reactedUsers.includes(username)) {
+            existing.count++;
+            existing.reactedUsers.push(username);
+          }
+        } else {
+          updatedReactions.push({ emoji, count: 1, reactedUsers: [username] });
+        }
+
+        return { ...msg, reactions: updatedReactions };
+      })
     );
 
     socket.emit("addReaction", {
@@ -120,16 +108,25 @@ const ChatBox = ({ selectedUser, setSelectedUser }) => {
       }
     };
 
-    const handleReactionUpdate = (data) => {
+    const handleReactionUpdate = ({ messageId, emoji, userId }) => {
       setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === data.messageId
-            ? {
-                ...msg,
-                reactions: toggleReaction(msg.reactions || [], data.emoji, data.userId),
-              }
-            : msg
-        )
+        prev.map((msg) => {
+          if (msg._id !== messageId) return msg;
+
+          const updatedReactions = [...(msg.reactions || [])];
+          const existing = updatedReactions.find((r) => r.emoji === emoji);
+
+          if (existing) {
+            if (!existing.reactedUsers.includes(userId)) {
+              existing.count++;
+              existing.reactedUsers.push(userId);
+            }
+          } else {
+            updatedReactions.push({ emoji, count: 1, reactedUsers: [userId] });
+          }
+
+          return { ...msg, reactions: updatedReactions };
+        })
       );
     };
 
