@@ -4,6 +4,7 @@ import socket from '../socket';
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
+  const [notificationUsers, setNotificationUsers] = useState([]);
   const { userName: activeUser } = useParams();
   const username = localStorage.getItem('username');
   const navigate = useNavigate();
@@ -18,18 +19,27 @@ const UserList = () => {
       setUsers(filteredUsers);
     });
 
+    // 🔔 Listen for private notification popup indicator
+    socket.on('notifyUserList', ({ sender }) => {
+      if (sender !== activeUser && !notificationUsers.includes(sender)) {
+        setNotificationUsers((prev) => [...prev, sender]);
+      }
+    });
+
     return () => {
       socket.off('activeUsers');
+      socket.off('notifyUserList');
     };
-  }, [username]);
+  }, [username, activeUser, notificationUsers]);
 
   const handleUserClick = (userName) => {
     navigate(`/private/${userName}`);
+    // ✅ Clear red dot once clicked
+    setNotificationUsers((prev) => prev.filter(name => name !== userName));
   };
 
   return (
     <div className="p-4 bg-gray backdrop-blur-md h-full shadow-lg rounded-3xl border border-gray-200">
-      {/* Gradient Title */}
       <div className="text-xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 border-b pb-3">
         💬Online Users:
       </div>
@@ -51,7 +61,13 @@ const UserList = () => {
                 alt={user.name}
                 className="w-12 h-12 rounded-full object-cover border-2 border-white group-hover:scale-105 transition-transform duration-300"
               />
+              {/* 🟢 Online dot */}
               <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white shadow-md" />
+
+              {/* 🔴 Notification red dot */}
+              {notificationUsers.includes(user.name) && (
+                <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white shadow" />
+              )}
             </div>
 
             <div className="flex flex-col">

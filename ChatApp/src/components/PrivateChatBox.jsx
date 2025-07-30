@@ -13,6 +13,9 @@ const PrivateChatBox = () => {
   const [receiverAvatar, setReceiverAvatar] = useState("default.png");
   const [isOnline, setIsOnline] = useState(false);
   const [typing, setTyping] = useState(false);
+  const [popupMessage, setPopupMessage] = useState(null);
+  const [unreadUsers, setUnreadUsers] = useState([]);
+
   const username = localStorage.getItem("username") || "";
   const avatar = localStorage.getItem("avatar") || "default.png";
   const messagesEndRef = useRef(null);
@@ -62,7 +65,9 @@ const PrivateChatBox = () => {
       console.error("❌ Error saving message:", error);
     }
 
+    setMessages((prev) => [...prev, message]);
     setInput("");
+    setUnreadUsers((prev) => prev.filter((u) => u !== receiver));
   };
 
   const handleInputChange = (e) => {
@@ -107,7 +112,15 @@ const PrivateChatBox = () => {
 
       if (isRelevant) {
         setMessages((prev) => [...prev, data]);
-        if (data.sender !== username) audio.play();
+        if (data.sender !== username) {
+          audio.play();
+          setPopupMessage({ from: data.sender, text: data.message });
+          setTimeout(() => setPopupMessage(null), 5000);
+        }
+      }
+
+      if (data.receiver === username && data.sender !== receiver) {
+        setUnreadUsers((prev) => (prev.includes(data.sender) ? prev : [...prev, data.sender]));
       }
     };
 
@@ -115,8 +128,14 @@ const PrivateChatBox = () => {
     return () => socket.off("receivePrivateMessage", handleReceiveMessage);
   }, [receiver, username]);
 
+  useEffect(() => {
+    socket.emit("getUnreadUsers", username);
+    socket.on("unreadUsers", (data) => setUnreadUsers(data));
+    return () => socket.off("unreadUsers");
+  }, [username]);
+
   return (
-    <div className="flex flex-col h-full w-full bg-white shadow rounded-xl overflow-hidden">
+    <div className="relative flex flex-col h-full w-full bg-white shadow rounded-xl overflow-hidden">
       {/* 🔷 Header */}
       <div className="flex items-center p-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white sticky top-0 z-10">
         <img
@@ -174,6 +193,13 @@ const PrivateChatBox = () => {
           Send
         </button>
       </form>
+
+      {/* 🪟 Chat Popup */}
+      {popupMessage && (
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-xl shadow-lg z-50">
+          <strong>{popupMessage.from}</strong>: {popupMessage.text}
+        </div>
+      )}
     </div>
   );
 };
